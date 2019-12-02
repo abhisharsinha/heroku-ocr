@@ -35,4 +35,4 @@ def detect_text():
         return jsonify(send_res)
 
 if __name__ == "__main__":
-   app.run()
+   app.run(debug=True)
