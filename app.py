@@ -1,5 +1,6 @@
 from flask import Flask, request, redirect, jsonify
 import tensorflow as tf
+import numpy as np
 
 export_path = "./exported-model"
 
@@ -28,7 +29,7 @@ def detect_text():
         
                 
         # Cannot zip non-lists so making list of single value when out[1] is not a list
-        if not type(out[1]) == list:
+        if not type(out[1]) == np.ndarray:
         	out[0] = [out[0]]
         	out[1] = [out[1]]
 
