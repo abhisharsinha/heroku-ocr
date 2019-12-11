@@ -27,6 +27,7 @@ def detect_text():
         
         send_res = {"response":[]}
         images = []
+        filenames = []
         # Creating a list of images as bytes to feed to the model
         for img in files:
             # Checking if all uploaded files are images
