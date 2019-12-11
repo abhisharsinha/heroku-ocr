@@ -4,6 +4,9 @@ import numpy as np
 
 export_path = "./exported-model"
 
+# Allow only image files
+ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg']
+
 app = Flask(__name__)
 
 @app.route("/", methods=["POST", "GET"])
@@ -16,14 +19,28 @@ def detect_text():
         tf.saved_model.loader.load(sess, ["serve"], export_path)
 
         files = request.files.getlist("image")
+        
+        # if no file is selected
+        if files[0].filename == "":
+            print("No files uploaded!")
+            return redirect(request.url)
+        
         send_res = {"response":[]}
         images = []
-        filenames = []
+        # Creating a list of images as bytes to feed to the model
         for img in files:
+            # Checking if all uploaded files are images
+            if img.filename.split(".")[-1] not in ALLOWED_EXTENSIONS:
+                continue
             image = img.read()
             images.append(image)
             filenames.append(img.filename)
         
+        # If not image files then redirect
+        if not filenames:
+            print("No images uploaded!")
+            return redirect(request.url)
+
         out = sess.run(['prediction:0', 'probability:0'], feed_dict={'input_image_as_bytes:0': images}) 
         # Returns a list of two lists for pred and prob
         
